@@ -33,6 +33,21 @@ CREATE TABLE IF NOT EXISTS rooms (
     amenities TEXT NOT NULL DEFAULT ',',
     notes TEXT NOT NULL DEFAULT ''
 );
+
+-- Uploaded room photos. The image bytes live on disk (see app/photos.py); only
+-- the metadata is stored here. `stored_name` is a generated filename, never
+-- anything the uploader chose. ON DELETE CASCADE keeps rows from outliving the
+-- room, though the files themselves still need an explicit unlink.
+CREATE TABLE IF NOT EXISTS room_photos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    room_id INTEGER NOT NULL REFERENCES rooms(id) ON DELETE CASCADE,
+    stored_name TEXT NOT NULL UNIQUE,
+    content_type TEXT NOT NULL,
+    size_bytes INTEGER NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_room_photos_room ON room_photos(room_id);
 """
 
 
@@ -87,3 +102,45 @@ def encode_amenities(amenities: list[str]) -> str:
 
 def decode_amenities(encoded: str) -> list[str]:
     return [a for a in encoded.split(",") if a]
+
+
+# --- Photos -----------------------------------------------------------------
+
+
+def photos_by_room(conn: sqlite3.Connection, room_ids: Iterable[int]) -> dict[int, list[dict]]:
+    """Map room id -> photo records, in one query rather than one query per room.
+
+    Owners need the id (to delete a photo); bookers only ever need the url.
+    """
+    ids = list(room_ids)
+    if not ids:
+        return {}
+
+    from app.photos import public_url
+
+    placeholders = ",".join("?" * len(ids))
+    rows = conn.execute(
+        f"SELECT id, room_id, content_type, size_bytes FROM room_photos "
+        f"WHERE room_id IN ({placeholders}) ORDER BY id",
+        tuple(ids),
+    ).fetchall()
+
+    by_room: dict[int, list[dict]] = {room_id: [] for room_id in ids}
+    for row in rows:
+        by_room[row["room_id"]].append(
+            {
+                "id": row["id"],
+                "url": public_url(row["id"]),
+                "content_type": row["content_type"],
+                "size": row["size_bytes"],
+            }
+        )
+    return by_room
+
+
+def photo_urls_by_room(conn: sqlite3.Connection, room_ids: Iterable[int]) -> dict[int, list[str]]:
+    """Map room id -> photo URLs. What the booker-facing payloads carry."""
+    return {
+        room_id: [photo["url"] for photo in photos]
+        for room_id, photos in photos_by_room(conn, room_ids).items()
+    }

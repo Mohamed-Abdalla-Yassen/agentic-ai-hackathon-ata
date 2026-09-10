@@ -13,6 +13,7 @@ dependencies = [
     "pyjwt>=2.9",
     "anthropic>=0.40",
     "python-dotenv>=1.0",
+    "python-multipart>=0.0.9",
 ]
 
 [dependency-groups]

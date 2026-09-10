@@ -14,7 +14,10 @@ export class ApiError extends Error {
 
 async function request(path, { method = 'GET', body, auth = true } = {}) {
   const headers = {}
-  if (body !== undefined) headers['Content-Type'] = 'application/json'
+  // FormData sets its own multipart Content-Type, including the boundary the
+  // server needs to parse the parts. Setting it by hand would strip that.
+  const isForm = typeof FormData !== 'undefined' && body instanceof FormData
+  if (body !== undefined && !isForm) headers['Content-Type'] = 'application/json'
 
   if (auth) {
     const token = getCookie(TOKEN_COOKIE)
@@ -26,7 +29,7 @@ async function request(path, { method = 'GET', body, auth = true } = {}) {
     res = await fetch(`${BASE}${path}`, {
       method,
       headers,
-      body: body !== undefined ? JSON.stringify(body) : undefined,
+      body: body === undefined ? undefined : isForm ? body : JSON.stringify(body),
     })
   } catch {
     // Network-level failure: backend not running, DNS, offline.
@@ -85,6 +88,13 @@ export const api = {
   mySpaces: () => request('/spaces/mine'),
   createRoom: (spaceId, payload) =>
     request(`/spaces/${spaceId}/rooms`, { method: 'POST', body: payload }),
+  uploadPhoto: (roomId, file) => {
+    const form = new FormData()
+    form.append('file', file)
+    return request(`/rooms/${roomId}/photos`, { method: 'POST', body: form })
+  },
+  roomPhotos: (roomId) => request(`/rooms/${roomId}/photos`),
+  deletePhoto: (photoId) => request(`/photos/${photoId}`, { method: 'DELETE' }),
 
   // ---- Booker ----
   search: (params) => request(`/search${qs(params)}`),

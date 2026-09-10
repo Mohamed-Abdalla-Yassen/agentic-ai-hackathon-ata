@@ -14,6 +14,7 @@ from app.config import (
     rate_limit_ai_per_hour,
     rate_limit_auth_per_hour,
     rate_limit_read_per_minute,
+    rate_limit_upload_per_hour,
     trust_proxy_headers,
 )
 from app.db import get_connection, query_one
@@ -101,6 +102,16 @@ def rate_limit_read(user: dict = Depends(get_current_user)) -> dict:
         "too many requests, please slow down",
     )
     return user
+
+
+def rate_limit_upload(user: dict = Depends(get_current_user)) -> None:
+    """Per-owner cap on photo uploads — each one costs disk, not tokens."""
+    _enforce(
+        "upload",
+        str(user["id"]),
+        Limit(rate_limit_upload_per_hour(), 3600),
+        "too many photo uploads, please try again later",
+    )
 
 
 def consume_ai_quota(user: dict) -> None:

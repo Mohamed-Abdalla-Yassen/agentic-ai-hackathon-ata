@@ -36,6 +36,7 @@ function paramsFromForm(form) {
 
 function ResultCard({ result, rank, aiRanked }) {
   const amenities = result.amenities ?? []
+  const thumb = (result.photos ?? [])[0]
 
   return (
     <Card hover className="result">
@@ -47,6 +48,10 @@ function ResultCard({ result, rank, aiRanked }) {
           <span className={`result__rank ${aiRanked ? 'result__rank--ai' : ''}`}>
             {rank}
           </span>
+
+          {thumb && (
+            <img className="result__thumb" src={thumb} alt="" loading="lazy" />
+          )}
 
           <div className="result__body">
             <span className="result__name">

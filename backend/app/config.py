@@ -105,6 +105,48 @@ def rate_limit_ai_global_per_day() -> int:
     return _env_int("RATE_LIMIT_AI_GLOBAL_PER_DAY", 500)
 
 
+# --- Photo uploads ---------------------------------------------------------
+
+# What an owner is allowed to upload. Deliberately a short allowlist of formats
+# browsers render natively: anything else (SVG especially, which can carry
+# script) is refused rather than sanitised.
+ALLOWED_PHOTO_TYPES = {
+    "image/jpeg": ".jpg",
+    "image/png": ".png",
+    "image/webp": ".webp",
+}
+
+# Leading bytes that identify each allowed format. The browser-supplied
+# Content-Type is a claim, not evidence, so the file is identified by its own
+# contents before anything is written to disk.
+PHOTO_MAGIC_BYTES = {
+    "image/jpeg": [b"\xff\xd8\xff"],
+    "image/png": [b"\x89PNG\r\n\x1a\n"],
+    # WebP is "RIFF....WEBP" — the size field sits between the two markers.
+    "image/webp": [b"RIFF"],
+}
+
+
+def upload_dir() -> str:
+    """Directory holding uploaded photo files. Created on first write."""
+    return os.environ.get("UPLOAD_DIR", "").strip() or "./data/uploads"
+
+
+def max_photo_bytes() -> int:
+    """Largest accepted upload. Default 5 MB."""
+    return _env_int("MAX_PHOTO_BYTES", 5 * 1024 * 1024)
+
+
+def max_photos_per_room() -> int:
+    """Cap per room, so one owner cannot fill the disk."""
+    return _env_int("MAX_PHOTOS_PER_ROOM", 8)
+
+
+def rate_limit_upload_per_hour() -> int:
+    """Photo uploads allowed per owner per hour."""
+    return _env_int("RATE_LIMIT_UPLOAD_PER_HOUR", 60)
+
+
 def trust_proxy_headers() -> bool:
     """Whether to read the client IP from X-Forwarded-For.
 

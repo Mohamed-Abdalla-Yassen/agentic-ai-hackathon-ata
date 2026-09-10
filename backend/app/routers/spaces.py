@@ -2,7 +2,14 @@ import sqlite3
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from app.db import decode_amenities, encode_amenities, execute, query_all, query_one
+from app.db import (
+    decode_amenities,
+    encode_amenities,
+    execute,
+    photos_by_room,
+    query_all,
+    query_one,
+)
 from app.deps import db_conn, require_owner
 from app.schemas import RoomCreate, RoomOut, SpaceCreate, SpaceOut, SpaceWithRooms
 
@@ -48,6 +55,8 @@ def list_my_spaces(
         space_ids,
     )
 
+    photos = photos_by_room(conn, [room["id"] for room in rooms])
+
     rooms_by_space: dict[int, list[dict]] = {sid: [] for sid in space_ids}
     for room in rooms:
         rooms_by_space[room["space_id"]].append(room)
@@ -56,7 +65,13 @@ def list_my_spaces(
         SpaceWithRooms(
             **space,
             rooms=[
-                RoomOut(**{**room, "amenities": decode_amenities(room["amenities"])})
+                RoomOut(
+                    **{
+                        **room,
+                        "amenities": decode_amenities(room["amenities"]),
+                        "photos": photos.get(room["id"], []),
+                    }
+                )
                 for room in rooms_by_space[space["id"]]
             ],
         )

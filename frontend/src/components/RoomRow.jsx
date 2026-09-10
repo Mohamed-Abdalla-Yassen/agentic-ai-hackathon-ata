@@ -1,4 +1,5 @@
 import Icon from './ui/Icon'
+import PhotoManager from './PhotoManager'
 import { Badge } from './ui/primitives'
 import { AMENITIES, amenityLabel } from '../lib/amenities'
 import { formatPrice, pluralize } from '../lib/format'
@@ -10,39 +11,43 @@ export default function RoomRow({ room }) {
   const amenities = room.amenities ?? []
 
   return (
-    <div className="room-row">
-      <div className="room-row__main">
-        <span className="room-row__name">{room.name}</span>
+    <div className="room-row room-row--stack">
+      <div className="room-row__top">
+        <div className="room-row__main">
+          <span className="room-row__name">{room.name}</span>
 
-        <div className="meta-row">
-          <span className="meta">
-            <Icon name="users" size={15} />
-            {pluralize(room.capacity, 'seat')}
-          </span>
+          <div className="meta-row">
+            <span className="meta">
+              <Icon name="users" size={15} />
+              {pluralize(room.capacity, 'seat')}
+            </span>
+          </div>
+
+          {amenities.length > 0 && (
+            <div className="row row--wrap" style={{ gap: 'var(--s-2)' }}>
+              {amenities.map((a) => (
+                <Badge key={a} icon={ICON_BY_AMENITY[a]}>
+                  {amenityLabel(a)}
+                </Badge>
+              ))}
+            </div>
+          )}
+
+          {room.notes && (
+            <p className="note">
+              <Icon name="tag" size={14} />
+              {room.notes}
+            </p>
+          )}
         </div>
 
-        {amenities.length > 0 && (
-          <div className="row row--wrap" style={{ gap: 'var(--s-2)' }}>
-            {amenities.map((a) => (
-              <Badge key={a} icon={ICON_BY_AMENITY[a]}>
-                {amenityLabel(a)}
-              </Badge>
-            ))}
-          </div>
-        )}
-
-        {room.notes && (
-          <p className="note">
-            <Icon name="tag" size={14} />
-            {room.notes}
-          </p>
-        )}
+        <span className="room-row__price">
+          {formatPrice(room.price)}
+          <small>/{room.price_unit}</small>
+        </span>
       </div>
 
-      <span className="room-row__price">
-        {formatPrice(room.price)}
-        <small>/{room.price_unit}</small>
-      </span>
+      <PhotoManager roomId={room.id} photos={room.photos ?? []} />
     </div>
   )
 }

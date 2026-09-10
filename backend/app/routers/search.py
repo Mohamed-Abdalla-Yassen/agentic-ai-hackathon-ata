@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 
 from app.ai import rank_rooms
 from app.config import SEARCH_CANDIDATE_LIMIT
-from app.db import decode_amenities, query_all, query_one
+from app.db import decode_amenities, photo_urls_by_room, query_all, query_one
 from app.deps import consume_ai_quota, db_conn, require_booker
 from app.schemas import ListingOut, SearchResponse, SearchResult
 
@@ -58,6 +58,8 @@ def search(
     for row in rows:
         row["amenities"] = decode_amenities(row["amenities"])
 
+    photos = photo_urls_by_room(conn, [row["room_id"] for row in rows])
+
     if not note:
         results = [
             SearchResult(
@@ -69,6 +71,7 @@ def search(
                 price=row["price"],
                 price_unit=row["price_unit"],
                 amenities=row["amenities"],
+                photos=photos.get(row["room_id"], []),
                 reason=None,
             )
             for row in rows
@@ -126,6 +129,7 @@ def search(
             price=rows_by_id[room_id]["price"],
             price_unit=rows_by_id[room_id]["price_unit"],
             amenities=rows_by_id[room_id]["amenities"],
+            photos=photos.get(room_id, []),
             reason=reason_by_id.get(room_id),
         )
         for room_id in order
@@ -156,6 +160,7 @@ def get_listing(
         raise HTTPException(status_code=404, detail="listing not found")
 
     return ListingOut(
+        photos=photo_urls_by_room(conn, [row["room_id"]])[row["room_id"]],
         roomId=row["room_id"],
         roomName=row["room_name"],
         capacity=row["capacity"],

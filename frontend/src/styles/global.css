@@ -1404,3 +1404,158 @@ h4 {
     font-size: var(--text-2xl);
   }
 }
+
+/* --- Photos ------------------------------------------------------------- */
+
+/* Listing gallery. The main image keeps the same height as .detail-hero, so a
+   listing with photos and one without occupy the same space and the page does
+   not jump as you move between them. */
+.gallery {
+  margin-bottom: var(--s-6);
+}
+
+.gallery__main {
+  width: 100%;
+  height: 340px;
+  object-fit: cover;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  display: block;
+}
+
+.gallery__strip {
+  display: flex;
+  gap: var(--s-2);
+  margin-top: var(--s-2);
+  overflow-x: auto;
+  padding-bottom: var(--s-1);
+}
+
+.gallery__pick {
+  flex: 0 0 auto;
+  width: 76px;
+  height: 56px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: none;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity var(--motion, 150ms) ease, border-color var(--motion, 150ms) ease;
+}
+
+.gallery__pick:hover,
+.gallery__pick.is-active {
+  opacity: 1;
+  border-color: var(--accent);
+}
+
+.gallery__pick img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Search result thumbnail. */
+.result__thumb {
+  width: 92px;
+  height: 68px;
+  object-fit: cover;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  flex: 0 0 auto;
+}
+
+/* Owner-side photo strip. */
+.room-row--stack {
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--s-3);
+}
+
+.room-row__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-4);
+}
+
+.photo-manager {
+  border-top: 1px dashed var(--border);
+  padding-top: var(--s-3);
+}
+
+.photo-manager__head {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.photo-manager__label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-subtle);
+  margin-right: auto;
+}
+
+.photo-manager__empty {
+  margin: var(--s-2) 0 0;
+  font-size: var(--text-sm);
+  color: var(--text-subtle);
+}
+
+.photo-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin-top: var(--s-2);
+}
+
+.photo-thumb {
+  position: relative;
+  width: 88px;
+  height: 66px;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.photo-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* The remove control sits on the image, so it carries its own scrim rather
+   than relying on whatever the photo happens to look like underneath. */
+.photo-thumb__remove {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+}
+
+.photo-thumb__remove:hover {
+  background: rgba(0, 0, 0, 0.78);
+  color: #fff;
+}
+
+@media (max-width: 640px) {
+  .gallery__main {
+    height: 220px;
+  }
+
+  .result__thumb {
+    display: none;
+  }
+}

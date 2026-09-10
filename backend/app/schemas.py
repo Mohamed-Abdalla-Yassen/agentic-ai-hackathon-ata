@@ -79,6 +79,13 @@ class RoomCreate(BaseModel):
         return v
 
 
+class PhotoOut(BaseModel):
+    id: int
+    url: str
+    content_type: str
+    size: int
+
+
 class RoomOut(BaseModel):
     id: int
     space_id: int
@@ -88,6 +95,8 @@ class RoomOut(BaseModel):
     price_unit: str
     amenities: list[str]
     notes: str
+    # Full records, not just urls: the owner dashboard needs ids to delete with.
+    photos: list[PhotoOut] = Field(default_factory=list)
 
 
 class SpaceWithRooms(SpaceOut):
@@ -106,6 +115,8 @@ class SearchResult(BaseModel):
     price: float
     price_unit: str
     amenities: list[str]
+    # Photo URLs, first one being what a result card shows as its thumbnail.
+    photos: list[str] = Field(default_factory=list)
     reason: Optional[str] = None
 
 
@@ -126,3 +137,4 @@ class ListingOut(BaseModel):
     address: str
     contact_info: str
     description: str
+    photos: list[str] = Field(default_factory=list)

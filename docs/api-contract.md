@@ -99,3 +99,44 @@ All error responses:
 { "error": "string" }
 ```
 Status codes: `400` validation, `401` missing/invalid token, `403` wrong role for action, `404` not found.
+
+---
+
+## Photos
+
+Photos belong to a **room**. Image bytes are stored on the server's filesystem;
+the API only ever exchanges metadata and URLs.
+
+Allowed formats: `image/jpeg`, `image/png`, `image/webp`. The format is decided
+by the file's own leading bytes, not by the `Content-Type` the client sends, so
+a non-image renamed to `.png` is refused. Default limits: 5 MB per file, 8
+photos per room (`MAX_PHOTO_BYTES`, `MAX_PHOTOS_PER_ROOM`).
+
+### POST /api/rooms/{room_id}/photos
+Owner only, and only for a room in a space they own.
+Request: `multipart/form-data` with a single `file` part.
+Response `201`:
+```json
+{ "id": "number", "url": "string", "content_type": "string", "size": "number" }
+```
+Errors: `400` unsupported format / empty / too large / room already at the cap,
+`403` not your room, `404` no such room, `429` upload rate limit.
+
+### GET /api/rooms/{room_id}/photos
+Response `200`: array of the same Photo object.
+
+### GET /api/photos/{photo_id}
+Returns the image bytes with the stored content type. **Unauthenticated** — a
+browser loading `<img src>` sends no Authorization header, and listing photos
+are public information. Served with a long immutable cache lifetime, since a
+photo id always maps to the same bytes.
+
+### DELETE /api/photos/{photo_id}
+Owner only. Response `204`. Errors: `403` not your photo, `404` no such photo.
+
+### Where photos appear
+* `GET /api/search` — each result carries `photos: string[]` (URLs); the first
+  is the card thumbnail.
+* `GET /api/listings/{room_id}` — `photos: string[]`, shown as a gallery.
+* `GET /api/spaces/mine` — each room carries `photos: Photo[]` (full objects,
+  since the owner UI needs ids to delete with).

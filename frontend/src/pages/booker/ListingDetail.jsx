@@ -31,7 +31,35 @@ function normalize(raw) {
     address: space.address ?? raw.address,
     contactInfo: space.contact_info ?? raw.contact_info,
     spaceDescription: space.description ?? raw.description,
+    photos: raw.photos ?? [],
   }
+}
+
+/** Big photo plus a row of thumbnails to switch it. */
+function Gallery({ photos, alt }) {
+  const [active, setActive] = useState(0)
+  const current = photos[Math.min(active, photos.length - 1)]
+
+  return (
+    <div className="gallery">
+      <img className="gallery__main" src={current} alt={alt} />
+      {photos.length > 1 && (
+        <div className="gallery__strip">
+          {photos.map((url, i) => (
+            <button
+              key={url}
+              type="button"
+              className={`gallery__pick ${i === active ? 'is-active' : ''}`}
+              onClick={() => setActive(i)}
+              aria-label={`Photo ${i + 1} of ${photos.length}`}
+            >
+              <img src={url} alt="" loading="lazy" />
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
 }
 
 export default function ListingDetail() {
@@ -78,10 +106,15 @@ export default function ListingDetail() {
 
       <div className="detail-layout">
         <div>
-          {/* No photo uploads in scope — a tinted panel beats a broken image. */}
-          <div className="detail-hero">
-            <Icon name="door" size={34} />
-          </div>
+          {room.photos.length > 0 ? (
+            <Gallery photos={room.photos} alt={room.name} />
+          ) : (
+            /* Owners are not required to upload, so a tinted panel still has to
+               look deliberate rather than like a broken image. */
+            <div className="detail-hero">
+              <Icon name="door" size={34} />
+            </div>
+          )}
 
           <div className="stack stack--sm" style={{ marginBottom: 'var(--s-6)' }}>
             <span className="eyebrow">{room.spaceName}</span>
