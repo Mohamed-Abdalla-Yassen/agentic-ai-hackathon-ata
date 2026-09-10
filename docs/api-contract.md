@@ -90,16 +90,6 @@ Results are hard-filtered by SQL first, then re-ranked by a single Claude call u
 ### GET /api/listings/:roomId
 Response `200`: full Room + parent Space details (no `reason` field — this is a direct lookup, not a ranked search result).
 
-### POST /api/bookings
-Request:
-```json
-{ "roomId": "number", "requested_start": "ISO 8601 datetime", "requested_end": "ISO 8601 datetime" }
-```
-Response `201`:
-```json
-{ "id": "number", "roomId": "number", "bookerId": "number", "requested_start": "string", "requested_end": "string", "status": "requested" }
-```
-
 ---
 
 ## Errors
