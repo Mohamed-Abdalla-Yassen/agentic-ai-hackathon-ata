@@ -26,6 +26,12 @@ CORS_ORIGINS = [
     "http://127.0.0.1:5173",
 ]
 
+# Supported providers for the search ranking call. "anthropic" talks to the
+# Claude Messages API; "openai" talks to any OpenAI-compatible /chat/completions
+# endpoint (OpenAI itself, SovereignEG, Ollama, vLLM, OpenRouter, ...).
+AI_PROVIDERS = ["anthropic", "openai"]
+DEFAULT_AI_PROVIDER = "anthropic"
+
 
 def _require_env(name: str) -> str:
     value = os.environ.get(name)
@@ -35,6 +41,11 @@ def _require_env(name: str) -> str:
             f"Copy backend/.env.example to backend/.env and fill it in."
         )
     return value
+
+
+def _optional_env(name: str) -> str | None:
+    value = os.environ.get(name)
+    return value.strip() or None if value else None
 
 
 # Read lazily (as functions, not module-level constants) so tests can set
@@ -48,9 +59,64 @@ def jwt_secret() -> str:
     return _require_env("JWT_SECRET")
 
 
-def anthropic_api_key() -> str:
-    return _require_env("ANTHROPIC_API_KEY")
+# --- AI provider selection -------------------------------------------------
 
 
-def ranking_model() -> str:
+def ai_provider() -> str:
+    """Which backend the search ranking call talks to.
+
+    Defaults to Anthropic so an existing .env keeps working untouched; set
+    AI_PROVIDER=openai to use any OpenAI-compatible endpoint instead.
+    """
+    value = (os.environ.get("AI_PROVIDER") or DEFAULT_AI_PROVIDER).strip().lower()
+    if value not in AI_PROVIDERS:
+        raise RuntimeError(
+            f"AI_PROVIDER must be one of {', '.join(AI_PROVIDERS)} — got {value!r}."
+        )
+    return value
+
+
+def anthropic_credentials() -> tuple[str, str]:
+    """Returns (kind, value) where kind is "api_key" or "auth_token".
+
+    A key is sent as `x-api-key`, a token as `Authorization: Bearer` — the two
+    are different auth schemes, so we track which one we were given. The key
+    wins if both are set.
+    """
+    api_key = _optional_env("ANTHROPIC_API_KEY")
+    if api_key:
+        return ("api_key", api_key)
+    auth_token = _optional_env("ANTHROPIC_AUTH_TOKEN")
+    if auth_token:
+        return ("auth_token", auth_token)
+    raise RuntimeError(
+        "Set either ANTHROPIC_API_KEY or ANTHROPIC_AUTH_TOKEN for "
+        "AI_PROVIDER=anthropic. Copy backend/.env.example to backend/.env "
+        "and fill it in."
+    )
+
+
+def anthropic_model() -> str:
     return _require_env("ANTHROPIC_MODEL")
+
+
+def anthropic_base_url() -> str | None:
+    """Overrides the Anthropic API endpoint (e.g. a compatible gateway)."""
+    return _optional_env("ANTHROPIC_BASE_URL")
+
+
+def openai_api_key() -> str:
+    return _require_env("OPENAI_API_KEY")
+
+
+def openai_model() -> str:
+    return _require_env("OPENAI_MODEL")
+
+
+def openai_base_url() -> str | None:
+    """Endpoint for the OpenAI-compatible provider.
+
+    Unset means api.openai.com. Point it at a compatible gateway to use another
+    model host — e.g. https://backend.sovereigneg.com/v1 for SovereignEG.
+    """
+    return _optional_env("OPENAI_BASE_URL")

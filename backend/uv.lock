@@ -372,6 +372,23 @@ wheels = [
 ]
 
 [[package]]
+name = "openai"
+version = "3.12.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "anyio" },
+    { name = "httpx2" },
+    { name = "jiter" },
+    { name = "pydantic" },
+    { name = "sniffio" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/6e/be/9590a0cefe815f71fb8d17ef7424bd7698d5e6dc29dd72f0a631f18c2071/openai-3.12.0.tar.gz", hash = "sha256:83ed9ea714792e9ef6183c2bd23325c6b922549c713cc94d56b6d79903e88bf7", size = 1557772, upload-time = "2026-09-10T17:29:33.839Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/25/c0/bd61170c913f9be63b9ac5bf09b21f218701c7a31f0a9c9d4e366389eb8c/openai-3.12.0-py3-none-any.whl", hash = "sha256:4f66612edf46f326c34f9638b027ceee0b9abe6ac8051d6408c79415ae6d26f1", size = 1860126, upload-time = "2026-09-10T17:29:31.859Z" },
+]
+
+[[package]]
 name = "packaging"
 version = "26.3"
 source = { registry = "https://pypi.org/simple" }
@@ -636,6 +653,7 @@ dependencies = [
     { name = "bcrypt" },
     { name = "email-validator" },
     { name = "fastapi" },
+    { name = "openai" },
     { name = "passlib", extra = ["bcrypt"] },
     { name = "pydantic" },
     { name = "pyjwt" },
@@ -655,6 +673,7 @@ requires-dist = [
     { name = "bcrypt", specifier = ">=4.0,<4.1" },
     { name = "email-validator", specifier = ">=2.2" },
     { name = "fastapi", specifier = ">=0.115" },
+    { name = "openai", specifier = ">=1.50" },
     { name = "passlib", extras = ["bcrypt"], specifier = ">=1.7.4" },
     { name = "pydantic", specifier = ">=2.9" },
     { name = "pyjwt", specifier = ">=2.9" },

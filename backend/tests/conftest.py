@@ -7,11 +7,25 @@ from fastapi.testclient import TestClient
 @pytest.fixture(autouse=True)
 def env(tmp_path, monkeypatch):
     """Point config at a throwaway DB/secret for every test, so the app never
-    touches real environment values or a real Anthropic key."""
+    touches real environment values or a real provider key.
+
+    Provider vars for both backends are cleared first — a developer's own .env
+    is already loaded by app.config at import time, and a stray AI_PROVIDER or
+    base URL there would otherwise change what these tests exercise.
+    """
+    for name in (
+        "AI_PROVIDER",
+        "ANTHROPIC_AUTH_TOKEN",
+        "ANTHROPIC_BASE_URL",
+        "OPENAI_BASE_URL",
+    ):
+        monkeypatch.delenv(name, raising=False)
     monkeypatch.setenv("DATABASE_PATH", str(tmp_path / "test.db"))
     monkeypatch.setenv("JWT_SECRET", "test-secret")
     monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
     monkeypatch.setenv("ANTHROPIC_MODEL", "test-model")
+    monkeypatch.setenv("OPENAI_API_KEY", "test-openai-key")
+    monkeypatch.setenv("OPENAI_MODEL", "test-openai-model")
 
 
 @pytest.fixture
