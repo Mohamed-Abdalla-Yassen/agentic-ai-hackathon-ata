@@ -6,10 +6,12 @@
 - Fetch-based API client, JWT stored in a cookie
 
 ## Backend
-- Node.js + Express
+- Python + FastAPI
 - REST API
-- JWT auth (Authorization: Bearer header)
-- bcrypt for password hashing
+- JWT auth (Authorization: Bearer header) via `python-jose` or PyJWT
+- `passlib[bcrypt]` for password hashing
+- Pydantic models for request/response validation
+- Uvicorn as the ASGI server
 
 ## Database
 - SQLite (file-based, zero setup)
@@ -22,7 +24,7 @@
 
 ## Repo layout
 ```
-/backend    - Express app, DB access, routes, AI call
+/backend    - FastAPI app, DB access, routes, AI call
 /frontend   - React + Vite app
 /docs       - specification, stack, api-contract
 ```
