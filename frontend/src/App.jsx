@@ -6,6 +6,9 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import NotFound from './pages/NotFound'
 import Placeholder from './pages/Placeholder'
+import OwnerDashboard from './pages/owner/OwnerDashboard'
+import NewSpace from './pages/owner/NewSpace'
+import NewRoom from './pages/owner/NewRoom'
 
 export default function App() {
   return (
@@ -15,18 +18,11 @@ export default function App() {
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
 
-        {/* Owner area — filled in by part 2 */}
+        {/* Owner area */}
         <Route element={<ProtectedRoute role="owner" />}>
-          <Route
-            path="owner"
-            element={
-              <Placeholder
-                icon="building"
-                title="Your spaces land here"
-                description="The owner dashboard — spaces, rooms and amenities — arrives in the next part of the build."
-              />
-            }
-          />
+          <Route path="owner" element={<OwnerDashboard />} />
+          <Route path="owner/spaces/new" element={<NewSpace />} />
+          <Route path="owner/spaces/:spaceId/rooms/new" element={<NewRoom />} />
         </Route>
 
         {/* Booker area — filled in by part 3 */}

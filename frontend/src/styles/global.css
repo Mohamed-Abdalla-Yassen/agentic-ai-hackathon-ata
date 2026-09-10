@@ -895,6 +895,152 @@ h4 {
 }
 
 /* =========================================================================
+   Owner — spaces & rooms
+   ========================================================================= */
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin-bottom: var(--s-4);
+}
+
+.back-link:hover {
+  color: var(--text);
+}
+
+.space-card + .space-card {
+  margin-top: var(--s-5);
+}
+
+.space-card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+  padding: var(--s-5) var(--s-6);
+  border-bottom: 1px solid var(--border);
+}
+
+.space-card__title {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-4);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.meta svg {
+  color: var(--text-subtle);
+  flex-shrink: 0;
+}
+
+.room-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.room-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-4);
+  padding: var(--s-4) var(--s-6);
+  flex-wrap: wrap;
+}
+
+.room-row + .room-row {
+  border-top: 1px solid var(--border);
+}
+
+.room-row__main {
+  flex: 1 1 260px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.room-row__name {
+  font-weight: 600;
+}
+
+.room-row__price {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+.room-row__price small {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--text-subtle);
+}
+
+.note {
+  display: flex;
+  gap: var(--s-2);
+  padding: var(--s-3);
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.note--ai {
+  background: var(--ai-soft);
+  border-color: var(--ai-border);
+  color: var(--ai-text);
+}
+
+.note svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.room-empty {
+  padding: var(--s-5) var(--s-6);
+  color: var(--text-subtle);
+  font-size: var(--text-sm);
+  border-top: 1px dashed var(--border);
+}
+
+.form-page {
+  max-width: 620px;
+  margin-inline: auto;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+}
+
+.form-actions {
+  display: flex;
+  gap: var(--s-3);
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+/* =========================================================================
    Footer
    ========================================================================= */
 
