@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SpaceMatch — Find the room that fits</title>
+    <meta
+      name="description"
+      content="SpaceMatch pairs you with workspaces and venues that actually fit how you work, using AI to read between the lines of what you need."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <script>
+      // Set the theme before first paint so a dark-mode reload never flashes
+      // the light canvas. Mirrors resolveTheme() in src/lib/theme.js.
+      (function () {
+        try {
+          var t =
+            localStorage.getItem('spacematch_theme') ||
+            (window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light')
+          document.documentElement.setAttribute('data-theme', t)
+          document.documentElement.style.colorScheme = t
+        } catch (e) {}
+      })()
+    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

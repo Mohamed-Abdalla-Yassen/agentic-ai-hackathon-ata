@@ -1,0 +1,163 @@
+/* =========================================================================
+   SpaceMatch — design tokens
+   One source of truth for colour, type, space, radius, shadow and motion.
+   Light is the default; dark is applied by [data-theme="dark"] on <html>,
+   which ThemeToggle sets and persists.
+   ========================================================================= */
+
+:root {
+  /* ---- Brand ramp: a deep evergreen. Calm and premium rather than
+     the default SaaS blue, and it stays legible on warm paper. ---- */
+  --green-50: #eef6f3;
+  --green-100: #d3e8e1;
+  --green-200: #a6d1c4;
+  --green-300: #6fb3a1;
+  --green-400: #3d9280;
+  --green-500: #1c7565;
+  --green-600: #12615a;
+  --green-700: #0d4a46;
+  --green-800: #0a3734;
+  --green-900: #072624;
+
+  /* ---- AI accent: reserved *only* for AI-generated moments (match
+     reasons, the preference note field). Scarcity is what makes it read
+     as meaningful rather than decorative. ---- */
+  --iris-100: #e8e5fb;
+  --iris-200: #cfc8f6;
+  --iris-400: #8f7fe0;
+  --iris-500: #6d5bd0;
+  --iris-600: #5744b4;
+  --iris-700: #43348c;
+
+  /* ---- Warm neutral ramp ---- */
+  --sand-50: #fbfaf8;
+  --sand-100: #f5f3ef;
+  --sand-200: #eae7e1;
+  --sand-300: #d9d5cc;
+  --sand-400: #b4aea3;
+  --sand-500: #8a847a;
+  --sand-600: #635e56;
+  --sand-700: #45413b;
+  --sand-800: #2a2723;
+  --sand-900: #17181a;
+
+  /* ---- Status ---- */
+  --danger-50: #fdf0ee;
+  --danger-500: #c0402b;
+  --danger-600: #9c3222;
+  --amber-50: #fdf5e7;
+  --amber-500: #b7791f;
+
+  /* ---- Semantic surface / text (light) ---- */
+  --canvas: var(--sand-50);
+  --surface: #ffffff;
+  --surface-sunken: var(--sand-100);
+  --surface-hover: var(--sand-100);
+  --border: var(--sand-200);
+  --border-strong: var(--sand-300);
+
+  --text: var(--sand-900);
+  --text-muted: var(--sand-600);
+  --text-subtle: var(--sand-500);
+  --text-on-accent: #ffffff;
+
+  --accent: var(--green-600);
+  --accent-hover: var(--green-700);
+  --accent-soft: var(--green-50);
+  --accent-ring: rgba(18, 97, 90, 0.28);
+
+  --ai: var(--iris-500);
+  --ai-soft: var(--iris-100);
+  --ai-border: var(--iris-200);
+  --ai-text: var(--iris-700);
+
+  --danger: var(--danger-500);
+  --danger-soft: var(--danger-50);
+
+  /* ---- Type ---- */
+  --font-display: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+  --text-4xl: 3rem;
+  --text-5xl: 4rem;
+
+  /* ---- Space: 4px base ---- */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.25rem;
+  --s-6: 1.5rem;
+  --s-8: 2rem;
+  --s-10: 2.5rem;
+  --s-12: 3rem;
+  --s-16: 4rem;
+  --s-20: 5rem;
+  --s-24: 6rem;
+
+  /* ---- Radius ---- */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-xl: 20px;
+  --r-full: 999px;
+
+  /* ---- Elevation: soft and warm-tinted, never a grey haze ---- */
+  --shadow-xs: 0 1px 2px rgba(23, 24, 26, 0.04);
+  --shadow-sm: 0 1px 3px rgba(23, 24, 26, 0.06), 0 1px 2px rgba(23, 24, 26, 0.04);
+  --shadow-md: 0 4px 12px rgba(23, 24, 26, 0.07), 0 1px 3px rgba(23, 24, 26, 0.05);
+  --shadow-lg: 0 14px 36px rgba(23, 24, 26, 0.1), 0 3px 10px rgba(23, 24, 26, 0.05);
+
+  /* ---- Motion ---- */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --fast: 130ms;
+  --base: 200ms;
+  --slow: 340ms;
+
+  --maxw: 1120px;
+  --maxw-narrow: 460px;
+}
+
+[data-theme='dark'] {
+  --canvas: #101113;
+  --surface: #17191c;
+  --surface-sunken: #1d2024;
+  --surface-hover: #22262a;
+  --border: #292d33;
+  --border-strong: #3a3f47;
+
+  --text: #f0eeea;
+  --text-muted: #a8a49c;
+  --text-subtle: #837e76;
+  --text-on-accent: #ffffff;
+
+  /* Lift the accent in dark mode — the deep green goes muddy on charcoal. */
+  --accent: var(--green-300);
+  --accent-hover: var(--green-200);
+  --accent-soft: rgba(111, 179, 161, 0.12);
+  --accent-ring: rgba(111, 179, 161, 0.32);
+  --text-on-accent: #072624;
+
+  --ai: var(--iris-400);
+  --ai-soft: rgba(143, 127, 224, 0.14);
+  --ai-border: rgba(143, 127, 224, 0.32);
+  --ai-text: #b8adf0;
+
+  --danger: #e2725c;
+  --danger-soft: rgba(226, 114, 92, 0.12);
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.36), 0 1px 2px rgba(0, 0, 0, 0.24);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.42), 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.34);
+}
