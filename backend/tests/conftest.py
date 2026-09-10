@@ -14,6 +14,17 @@ def env(tmp_path, monkeypatch):
     monkeypatch.setenv("ANTHROPIC_MODEL", "test-model")
 
 
+@pytest.fixture(autouse=True)
+def reset_rate_limits():
+    """Rate-limit counters live in module state, so they would otherwise leak
+    between tests and fail whichever test happened to run after a burst."""
+    from app.ratelimit import limiter
+
+    limiter.reset()
+    yield
+    limiter.reset()
+
+
 @pytest.fixture
 def client(env):
     from app.db import get_connection, init_schema

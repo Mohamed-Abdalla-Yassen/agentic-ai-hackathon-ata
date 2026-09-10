@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from app.ai import rank_rooms
 from app.config import SEARCH_CANDIDATE_LIMIT
 from app.db import decode_amenities, query_all, query_one
-from app.deps import db_conn, require_booker
+from app.deps import consume_ai_quota, db_conn, require_booker
 from app.schemas import ListingOut, SearchResponse, SearchResult
 
 router = APIRouter(tags=["search"])
@@ -74,6 +74,10 @@ def search(
             for row in rows
         ]
         return SearchResponse(results=results)
+
+    # Past this point the request costs Anthropic tokens, so it is charged
+    # against the AI budgets. Raises 429 before any spend if a quota is out.
+    consume_ai_quota(booker)
 
     rows_by_id = {row["room_id"]: row for row in rows}
     reason_by_id: dict[int, str] = {}

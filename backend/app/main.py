@@ -38,7 +38,13 @@ app.include_router(search.router, prefix="/api")
 
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
-    return JSONResponse(status_code=exc.status_code, content={"error": str(exc.detail)})
+    # exc.headers carries Retry-After on 429s — dropping it would leave clients
+    # with no idea when to come back.
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"error": str(exc.detail)},
+        headers=exc.headers,
+    )
 
 
 @app.exception_handler(RequestValidationError)

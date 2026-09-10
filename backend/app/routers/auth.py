@@ -3,11 +3,13 @@ import sqlite3
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.db import execute, query_one
-from app.deps import db_conn
+from app.deps import db_conn, rate_limit_auth
 from app.schemas import AuthResponse, LoginRequest, RegisterRequest, UserOut
 from app.security import create_token, hash_password, verify_password
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+# Every auth endpoint is unauthenticated and therefore only identifiable by
+# IP, so the limit is declared once on the router rather than per route.
+router = APIRouter(prefix="/auth", tags=["auth"], dependencies=[Depends(rate_limit_auth)])
 
 
 @router.post("/register", response_model=AuthResponse, status_code=201)
