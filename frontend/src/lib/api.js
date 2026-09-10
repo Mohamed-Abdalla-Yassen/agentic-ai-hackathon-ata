@@ -88,6 +88,9 @@ export const api = {
   mySpaces: () => request('/spaces/mine'),
   createRoom: (spaceId, payload) =>
     request(`/spaces/${spaceId}/rooms`, { method: 'POST', body: payload }),
+  room: (roomId) => request(`/rooms/${roomId}`),
+  updateRoom: (roomId, changes) =>
+    request(`/rooms/${roomId}`, { method: 'PATCH', body: changes }),
   uploadPhoto: (roomId, file) => {
     const form = new FormData()
     form.append('file', file)

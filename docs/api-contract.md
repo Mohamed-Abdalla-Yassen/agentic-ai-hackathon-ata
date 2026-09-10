@@ -100,6 +100,30 @@ All error responses:
 ```
 Status codes: `400` validation, `401` missing/invalid token, `403` wrong role for action, `404` not found.
 
+### GET /api/rooms/{room_id}
+Owner only, and only for a room in a space they own. Returns the editable view
+of one room — what the edit form loads. Distinct from `GET /api/listings/{id}`,
+which is the booker's public view.
+Response `200`: Room object (including `photos`).
+
+### PATCH /api/rooms/{room_id}
+Owner only. Updates any subset of a room's fields; omitted fields keep their
+stored value.
+Request (every field optional):
+```json
+{ "name": "string", "capacity": "number", "price": "number",
+  "price_unit": "hour | day", "amenities": "string[]", "notes": "string" }
+```
+Response `200`: the updated Room object.
+Errors: `400` validation (same rules as creation), `403` not your room,
+`404` no such room.
+
+Notes on semantics: an empty body is a harmless no-op; `notes: ""` clears the
+notes and `amenities: []` clears the amenities, since an explicit empty value is
+distinct from an omitted field. Edits are visible to bookers immediately, and
+changing `capacity`, `price` or `amenities` changes which searches the room
+matches.
+
 ---
 
 ## Photos

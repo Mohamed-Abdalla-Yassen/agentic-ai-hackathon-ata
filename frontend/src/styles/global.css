@@ -1559,3 +1559,12 @@ h4 {
     display: none;
   }
 }
+
+/* Price and edit control sit together at the end of a room row. */
+.room-row__side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--s-1);
+  flex: 0 0 auto;
+}

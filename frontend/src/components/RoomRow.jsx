@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import Icon from './ui/Icon'
 import PhotoManager from './PhotoManager'
 import { Badge } from './ui/primitives'
@@ -41,10 +42,16 @@ export default function RoomRow({ room }) {
           )}
         </div>
 
-        <span className="room-row__price">
-          {formatPrice(room.price)}
-          <small>/{room.price_unit}</small>
-        </span>
+        <div className="room-row__side">
+          <span className="room-row__price">
+            {formatPrice(room.price)}
+            <small>/{room.price_unit}</small>
+          </span>
+          <Link to={`/owner/rooms/${room.id}/edit`} className="btn btn--ghost btn--sm">
+            <Icon name="pencil" size={14} />
+            Edit
+          </Link>
+        </div>
       </div>
 
       <PhotoManager roomId={room.id} photos={room.photos ?? []} />

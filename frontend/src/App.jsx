@@ -8,6 +8,7 @@ import NotFound from './pages/NotFound'
 import OwnerDashboard from './pages/owner/OwnerDashboard'
 import NewSpace from './pages/owner/NewSpace'
 import NewRoom from './pages/owner/NewRoom'
+import EditRoom from './pages/owner/EditRoom'
 import Search from './pages/booker/Search'
 import ListingDetail from './pages/booker/ListingDetail'
 
@@ -24,6 +25,7 @@ export default function App() {
           <Route path="owner" element={<OwnerDashboard />} />
           <Route path="owner/spaces/new" element={<NewSpace />} />
           <Route path="owner/spaces/:spaceId/rooms/new" element={<NewRoom />} />
+          <Route path="owner/rooms/:roomId/edit" element={<EditRoom />} />
         </Route>
 
         {/* Booker area */}

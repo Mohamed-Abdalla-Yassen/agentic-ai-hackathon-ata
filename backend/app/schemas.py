@@ -79,6 +79,36 @@ class RoomCreate(BaseModel):
         return v
 
 
+class RoomUpdate(BaseModel):
+    """Partial update of a room. Unset fields are left alone; the validators
+    mirror RoomCreate so an edit cannot put a room into a state that creation
+    would have refused."""
+
+    name: Optional[str] = Field(default=None, min_length=1)
+    capacity: Optional[int] = Field(default=None, gt=0)
+    price: Optional[float] = Field(default=None, gt=0)
+    price_unit: Optional[str] = None
+    amenities: Optional[list[str]] = None
+    notes: Optional[str] = None
+
+    @field_validator("price_unit")
+    @classmethod
+    def validate_price_unit(cls, v: str | None) -> str | None:
+        if v is not None and v not in PRICE_UNITS:
+            raise ValueError(f"price_unit must be one of {PRICE_UNITS}")
+        return v
+
+    @field_validator("amenities")
+    @classmethod
+    def validate_amenities(cls, v: list[str] | None) -> list[str] | None:
+        if v is None:
+            return v
+        unknown = [a for a in v if a not in ROOM_AMENITIES]
+        if unknown:
+            raise ValueError(f"unknown amenities: {unknown}. Allowed: {ROOM_AMENITIES}")
+        return v
+
+
 class PhotoOut(BaseModel):
     id: int
     url: str
