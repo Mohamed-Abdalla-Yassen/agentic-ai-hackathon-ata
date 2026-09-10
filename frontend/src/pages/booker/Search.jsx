@@ -5,6 +5,7 @@ import { useAsync } from '../../lib/useAsync'
 import { AMENITIES, amenityLabel } from '../../lib/amenities'
 import { formatPrice, pluralize } from '../../lib/format'
 import Icon from '../../components/ui/Icon'
+import FavoriteButton from '../../components/FavoriteButton'
 import { Alert, Badge, Card, EmptyState, Button, Loading } from '../../components/ui/primitives'
 import { AmenityPicker, Field, Input, Textarea } from '../../components/ui/form'
 
@@ -94,6 +95,8 @@ function ResultCard({ result, rank, aiRanked }) {
             <strong>{formatPrice(result.price)}</strong>
             <small>per {result.price_unit}</small>
           </span>
+
+          <FavoriteButton roomId={result.roomId} favorite={result.favorite} />
         </div>
       </Link>
     </Card>

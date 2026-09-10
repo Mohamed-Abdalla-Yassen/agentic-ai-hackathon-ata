@@ -83,6 +83,10 @@ export const api = {
   login: (payload) =>
     request('/auth/login', { method: 'POST', body: payload, auth: false }),
 
+  // ---- Profile ----
+  me: () => request('/me'),
+  updateProfile: (changes) => request('/me', { method: 'PATCH', body: changes }),
+
   // ---- Owner ----
   createSpace: (payload) => request('/spaces', { method: 'POST', body: payload }),
   mySpaces: () => request('/spaces/mine'),
@@ -102,6 +106,10 @@ export const api = {
   // ---- Booker ----
   search: (params) => request(`/search${qs(params)}`),
   listing: (roomId) => request(`/listings/${roomId}`),
+  favorites: () => request('/favorites'),
+  addFavorite: (roomId) => request(`/rooms/${roomId}/favorite`, { method: 'PUT' }),
+  removeFavorite: (roomId) =>
+    request(`/rooms/${roomId}/favorite`, { method: 'DELETE' }),
   createBooking: (payload) =>
     request('/bookings', { method: 'POST', body: payload }),
 }

@@ -9,7 +9,7 @@ from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 
 from app.config import CORS_ORIGINS
-from app.routers import auth, photos, rooms, search, spaces
+from app.routers import auth, favorites, me, photos, rooms, search, spaces
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +27,8 @@ app.include_router(auth.router, prefix="/api")
 app.include_router(spaces.router, prefix="/api")
 app.include_router(search.router, prefix="/api")
 app.include_router(rooms.router, prefix="/api")
+app.include_router(favorites.router, prefix="/api")
+app.include_router(me.router, prefix="/api")
 app.include_router(photos.router, prefix="/api")
 
 

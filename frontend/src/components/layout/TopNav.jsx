@@ -42,6 +42,17 @@ export default function TopNav() {
                 Find a space
               </NavLink>
             ))}
+
+          {isAuthed && !isOwner && (
+            <NavLink
+              to="/favorites"
+              className={({ isActive }) =>
+                `nav__link ${isActive ? 'nav__link--active' : ''}`
+              }
+            >
+              Favourites
+            </NavLink>
+          )}
         </nav>
 
         <span className="spacer" />
@@ -50,9 +61,13 @@ export default function TopNav() {
 
         {isAuthed ? (
           <div className="nav__user">
-            <span className="avatar" title={`${user.name} · ${user.role}`}>
+            <Link
+              to="/profile"
+              className="avatar avatar--link"
+              title={`${user.name} · ${user.role} — your profile`}
+            >
               {initials(user.name)}
-            </span>
+            </Link>
             <IconButton icon="logout" label="Sign out" onClick={handleLogout} />
           </div>
         ) : (

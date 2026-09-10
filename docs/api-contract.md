@@ -164,3 +164,52 @@ Owner only. Response `204`. Errors: `403` not your photo, `404` no such photo.
 * `GET /api/listings/{room_id}` — `photos: string[]`, shown as a gallery.
 * `GET /api/spaces/mine` — each room carries `photos: Photo[]` (full objects,
   since the owner UI needs ids to delete with).
+
+---
+
+## Profile
+
+### GET /api/me
+Returns the user the current token belongs to.
+Response `200`: `{ "id", "name", "email", "role" }`.
+
+### PATCH /api/me
+Updates the signed-in user's own account. There is no route that takes a user
+id — the token is the only subject, so one user can never edit another.
+Request (every field optional):
+```json
+{ "name": "string", "email": "string", "password": "string",
+  "current_password": "string" }
+```
+`current_password` is required when changing `email` or `password`, so a
+borrowed or forgotten session cannot be used to take an account over. Changing
+only the display name needs no re-authentication. New passwords must be at
+least 8 characters.
+
+`role` is not editable: switching between owner and booker would change what
+the account can reach and orphan its spaces or favourites.
+
+Response `200`: the updated user. Errors: `400` missing/incorrect current
+password, email already registered, or validation.
+
+---
+
+## Favourites
+
+Favourites belong to a **booker** and are private to that user.
+
+### PUT /api/rooms/{room_id}/favorite
+Saves a room. Idempotent — saving twice is a no-op, not an error.
+Response `204`. Errors: `403` not a booker, `404` no such room.
+
+### DELETE /api/rooms/{room_id}/favorite
+Unsaves a room. Also idempotent.
+Response `204`.
+
+### GET /api/favorites
+The booker's saved rooms, newest first. Each entry has the same shape as a
+search result (with `favorite: true`), so the same card renders both.
+
+### Where the flag appears
+`GET /api/search` results and `GET /api/listings/{id}` both carry
+`favorite: boolean` for the requesting booker.

@@ -11,6 +11,8 @@ import NewRoom from './pages/owner/NewRoom'
 import EditRoom from './pages/owner/EditRoom'
 import Search from './pages/booker/Search'
 import ListingDetail from './pages/booker/ListingDetail'
+import Favorites from './pages/booker/Favorites'
+import Profile from './pages/Profile'
 
 export default function App() {
   return (
@@ -28,10 +30,16 @@ export default function App() {
           <Route path="owner/rooms/:roomId/edit" element={<EditRoom />} />
         </Route>
 
+        {/* Any signed-in user */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="profile" element={<Profile />} />
+        </Route>
+
         {/* Booker area */}
         <Route element={<ProtectedRoute role="booker" />}>
           <Route path="search" element={<Search />} />
           <Route path="listings/:roomId" element={<ListingDetail />} />
+          <Route path="favorites" element={<Favorites />} />
         </Route>
 
         <Route path="404" element={<NotFound />} />

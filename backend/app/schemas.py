@@ -36,6 +36,20 @@ class AuthResponse(BaseModel):
     user: UserOut
 
 
+class ProfileUpdate(BaseModel):
+    """Partial update of the signed-in user's own profile.
+
+    `role` is intentionally absent — see routers/me.py. `current_password` is
+    not a field being changed; it is the re-authentication that changing email
+    or password requires.
+    """
+
+    name: Optional[str] = Field(default=None, min_length=1)
+    email: Optional[EmailStr] = None
+    password: Optional[str] = Field(default=None, min_length=8)
+    current_password: Optional[str] = None
+
+
 # --- Spaces / Rooms ------------------------------------------------------
 
 
@@ -147,6 +161,7 @@ class SearchResult(BaseModel):
     amenities: list[str]
     # Photo URLs, first one being what a result card shows as its thumbnail.
     photos: list[str] = Field(default_factory=list)
+    favorite: bool = False
     reason: Optional[str] = None
 
 
@@ -168,3 +183,4 @@ class ListingOut(BaseModel):
     contact_info: str
     description: str
     photos: list[str] = Field(default_factory=list)
+    favorite: bool = False

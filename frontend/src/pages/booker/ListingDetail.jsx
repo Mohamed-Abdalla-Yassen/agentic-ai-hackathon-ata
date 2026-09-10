@@ -6,6 +6,7 @@ import { AMENITIES, amenityLabel } from '../../lib/amenities'
 import { formatPrice, pluralize } from '../../lib/format'
 import BackLink from '../../components/BackLink'
 import BookingDialog from '../../components/BookingDialog'
+import FavoriteButton from '../../components/FavoriteButton'
 import Icon from '../../components/ui/Icon'
 import { Alert, Badge, Button, Card, Loading } from '../../components/ui/primitives'
 
@@ -32,6 +33,7 @@ function normalize(raw) {
     contactInfo: space.contact_info ?? raw.contact_info,
     spaceDescription: space.description ?? raw.description,
     photos: raw.photos ?? [],
+    favorite: Boolean(raw.favorite),
   }
 }
 
@@ -118,7 +120,10 @@ export default function ListingDetail() {
 
           <div className="stack stack--sm" style={{ marginBottom: 'var(--s-6)' }}>
             <span className="eyebrow">{room.spaceName}</span>
-            <h1 className="detail-title">{room.name}</h1>
+            <div className="row row--between">
+              <h1 className="detail-title">{room.name}</h1>
+              <FavoriteButton roomId={room.id} favorite={room.favorite} />
+            </div>
             {room.address && (
               <span className="meta muted">
                 <Icon name="pin" size={16} />

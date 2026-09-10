@@ -42,6 +42,13 @@ export function AuthProvider({ children }) {
     [persist]
   )
 
+  /** Replace the cached user after a profile edit, keeping the same token. */
+  const updateUser = useCallback((nextUser) => {
+    localStorage.setItem(USER_KEY, JSON.stringify(nextUser))
+    setUser(nextUser)
+    return nextUser
+  }, [])
+
   const logout = useCallback(() => {
     deleteCookie(TOKEN_COOKIE)
     localStorage.removeItem(USER_KEY)
@@ -57,8 +64,9 @@ export function AuthProvider({ children }) {
       login,
       register,
       logout,
+      updateUser,
     }),
-    [user, login, register, logout]
+    [user, login, register, logout, updateUser]
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

@@ -12,6 +12,11 @@ def env(tmp_path, monkeypatch):
     monkeypatch.setenv("JWT_SECRET", "test-secret")
     monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
     monkeypatch.setenv("ANTHROPIC_MODEL", "test-model")
+    # Uploads too: any test that posts a photo must write into a throwaway
+    # directory, never the real one. This lives here rather than in the photo
+    # tests because several other suites upload a file incidentally, and each
+    # one that forgot would quietly litter the developer's data directory.
+    monkeypatch.setenv("UPLOAD_DIR", str(tmp_path / "uploads"))
 
 
 @pytest.fixture(autouse=True)

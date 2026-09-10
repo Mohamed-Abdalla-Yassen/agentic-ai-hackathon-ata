@@ -48,6 +48,18 @@ CREATE TABLE IF NOT EXISTS room_photos (
 );
 
 CREATE INDEX IF NOT EXISTS idx_room_photos_room ON room_photos(room_id);
+
+-- A booker's saved rooms. The composite primary key makes favouriting the same
+-- room twice a no-op instead of a duplicate row, so the endpoint can be
+-- idempotent without a read-then-write race.
+CREATE TABLE IF NOT EXISTS favorites (
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    room_id INTEGER NOT NULL REFERENCES rooms(id) ON DELETE CASCADE,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, room_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_favorites_user ON favorites(user_id);
 """
 
 
@@ -144,3 +156,25 @@ def photo_urls_by_room(conn: sqlite3.Connection, room_ids: Iterable[int]) -> dic
         room_id: [photo["url"] for photo in photos]
         for room_id, photos in photos_by_room(conn, room_ids).items()
     }
+
+
+# --- Favorites ---------------------------------------------------------------
+
+
+def favorite_room_ids(conn: sqlite3.Connection, user_id: int, room_ids: Iterable[int]) -> set[int]:
+    """Which of these rooms the user has favourited.
+
+    Scoped to the rooms actually being rendered rather than fetching the user's
+    whole favourites list, so a long-standing user does not pay for their
+    history on every search.
+    """
+    ids = list(room_ids)
+    if not ids:
+        return set()
+
+    placeholders = ",".join("?" * len(ids))
+    rows = conn.execute(
+        f"SELECT room_id FROM favorites WHERE user_id = ? AND room_id IN ({placeholders})",
+        (user_id, *ids),
+    ).fetchall()
+    return {row["room_id"] for row in rows}

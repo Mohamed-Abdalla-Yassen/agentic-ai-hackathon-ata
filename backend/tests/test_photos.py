@@ -11,12 +11,6 @@ JPEG = b"\xff\xd8\xff\xe0" + b"\x00" * 64
 WEBP = b"RIFF" + b"\x00\x00\x00\x00" + b"WEBP" + b"\x00" * 64
 
 
-@pytest.fixture(autouse=True)
-def uploads_to_tmp(tmp_path, monkeypatch):
-    """Never write test images into the real upload directory."""
-    monkeypatch.setenv("UPLOAD_DIR", str(tmp_path / "uploads"))
-
-
 def make_room(client, owner_token):
     space = client.post(
         "/api/spaces",
