@@ -5,10 +5,11 @@ import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import NotFound from './pages/NotFound'
-import Placeholder from './pages/Placeholder'
 import OwnerDashboard from './pages/owner/OwnerDashboard'
 import NewSpace from './pages/owner/NewSpace'
 import NewRoom from './pages/owner/NewRoom'
+import Search from './pages/booker/Search'
+import ListingDetail from './pages/booker/ListingDetail'
 
 export default function App() {
   return (
@@ -25,18 +26,10 @@ export default function App() {
           <Route path="owner/spaces/:spaceId/rooms/new" element={<NewRoom />} />
         </Route>
 
-        {/* Booker area — filled in by part 3 */}
+        {/* Booker area */}
         <Route element={<ProtectedRoute role="booker" />}>
-          <Route
-            path="search"
-            element={
-              <Placeholder
-                icon="search"
-                title="Search is on its way"
-                description="Filters, the free-text preference note and AI-ranked results arrive in the final part of the build."
-              />
-            }
-          />
+          <Route path="search" element={<Search />} />
+          <Route path="listings/:roomId" element={<ListingDetail />} />
         </Route>
 
         <Route path="404" element={<NotFound />} />
