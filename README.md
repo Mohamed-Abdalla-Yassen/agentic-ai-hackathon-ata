@@ -8,6 +8,8 @@ uses one AI ranking call to return the best matches with a short explanation.
 > Hackathon project. The current build focuses on the core owner, booker, search,
 > favorites, booking-request, profile, and room-photo workflows.
 
+You can watch the demo [here](https://drive.google.com/file/d/1LFMU-CeeowpEabO9mvRn8NnYGmDaEYmc/view?usp=sharing)!
+
 ## Highlights
 
 - Owner accounts with spaces, rooms, structured attributes, and notes
